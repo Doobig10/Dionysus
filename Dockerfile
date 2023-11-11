@@ -11,8 +11,8 @@ RUN apt-get update \
     && apt-get install -y maven
 
 WORKDIR /build
-ADD src/ ./src/
-ADD pom.xml .
+ADD build/src ./src/
+ADD build/pom.xml .
 
 RUN mvn compile
 RUN mvn assembly:single
@@ -30,8 +30,8 @@ FROM ubuntu/jre:17-22.04_edge AS environment
 # Clones the built JAR from builder
 
 WORKDIR /app
-COPY --from=builder /build/target/dionysus-latest.jar .
-CMD ["-jar", "dionysus-latest.jar"]
+COPY --from=builder /build/target/dionysus-latest-jar-with-dependencies.jar .
+CMD ["-jar", "dionysus-latest-jar-with-dependencies.jar"]
 
 # # END RUN
 # # -----------------------------
