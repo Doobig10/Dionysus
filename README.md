@@ -1,2 +1,2 @@
-# dionysus
+# Dionysus
 Final Year Project - Playing Games
