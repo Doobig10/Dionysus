@@ -7,13 +7,13 @@ import java.io.IOException;
 import java.net.Socket;
 
 public final class SocketTools {
-    private static final Logger logger = LoggerFactory.getLogger(SocketTools.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SocketTools.class);
 
     public static void closeSilently(Socket socket) {
         try {
             socket.close();
         } catch (IOException e) {
-            logger.atDebug().log("Ignoring exception during silent close", e);
+            LOGGER.atDebug().log("Ignoring exception during silent close", e);
         }
     }
 }
