@@ -1,4 +1,4 @@
-package connection;
+package network.connection;
 
 import com.google.gson.Gson;
 import org.slf4j.Logger;
@@ -20,16 +20,17 @@ public class ServerSocketConnectionHandler implements Runnable{
 
     @Override
     public void run() {
+        LOGGER.atTrace().log("Opened connection @ "+this.clientSocket.toString());
         try (
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(this.clientSocket.getOutputStream()));
+                PrintWriter writer = new PrintWriter(new OutputStreamWriter(this.clientSocket.getOutputStream()),true);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()))
         ) {
             String data;
             Gson gson = new Gson();
             while (((data = reader.readLine()) != null) && (!this.clientSocket.isClosed())) {
                 Request request = gson.fromJson(data, networkMaster.getRequestClass());
-                networkMaster.process(request);
-                //TODO: Implement Response
+                Completion completion = networkMaster.process(request);
+                writer.println(gson.toJson(completion));
             }
             if (Thread.interrupted()) {
                 throw new InterruptedException();

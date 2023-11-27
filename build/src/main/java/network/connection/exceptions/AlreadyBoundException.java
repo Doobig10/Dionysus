@@ -1,4 +1,4 @@
-package connection.exceptions;
+package network.connection.exceptions;
 
 public class AlreadyBoundException extends BindingException {
     public AlreadyBoundException(String error) {super(error);}

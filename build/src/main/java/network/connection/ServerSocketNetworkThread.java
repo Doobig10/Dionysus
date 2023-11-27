@@ -1,7 +1,7 @@
-package connection;
+package network.connection;
 
-import connection.exceptions.AlreadyBoundException;
-import connection.exceptions.UnboundException;
+import network.connection.exceptions.AlreadyBoundException;
+import network.connection.exceptions.UnboundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

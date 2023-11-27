@@ -1,4 +1,4 @@
-package connection;
+package network.connection;
 
 public final class NetworkThreadFactory {
 

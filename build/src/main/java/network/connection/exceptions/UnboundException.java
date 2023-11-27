@@ -1,4 +1,4 @@
-package connection.exceptions;
+package network.connection.exceptions;
 
 public class UnboundException extends BindingException {
     public UnboundException(String error) {

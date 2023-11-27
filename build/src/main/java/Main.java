@@ -1,22 +1,23 @@
-
-import connection.NetworkThreadFactory;
-import core.NetworkManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import network.connection.NetworkThreadFactory;
 
 public class Main {
-    private static final Logger logger = LoggerFactory.getLogger(Main.class);
-
     public static void main(String[] args) {
 
-        NetworkManager manager = new NetworkManager();
+        //TODO: Replace with ENV for docker-compose
+        int port = 22035;
+        int threads = 1;
 
-        manager.connectNetworkThread(
+        Core core = CoreSingleton.getInstance();
+
+        core.getNetworkManager().connectNetworkThread(
                 NetworkThreadFactory.getServerSocketBuilder()
-                        .setPort(22035)
-                        .setThreadCount(1)
+                        .setPort(port)
+                        .setThreadCount(threads)
                         .build()
-                );
-    }
+        );
 
+
+
+
+    }
 }

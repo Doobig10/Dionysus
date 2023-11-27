@@ -1,6 +1,6 @@
-package connection;
+package network.connection;
 
-import connection.exceptions.AlreadyBoundException;
+import network.connection.exceptions.AlreadyBoundException;
 
 public interface NetworkThread extends Runnable {
 
