@@ -9,4 +9,6 @@ public interface NetworkThread extends Runnable {
     boolean isBound();
 
     void start();
+
+    void close();
 }

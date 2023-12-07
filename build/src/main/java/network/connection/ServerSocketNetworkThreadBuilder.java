@@ -2,8 +2,14 @@ package network.connection;
 
 public class ServerSocketNetworkThreadBuilder {
 
+    private String address = "localhost";
     private int port;
     private int threadCount = 1;
+
+    public ServerSocketNetworkThreadBuilder setAddress(String address) {
+        this.address = address;
+        return this;
+    }
 
     public ServerSocketNetworkThreadBuilder setPort(int port) {
         this.port = port;

@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 public class DebugConnectionTest {
     @Test
     public void echoTest() throws IOException {
-        Core expectation = new Core();
+        Master expectation = new Master();
 
         Gson gson = new Gson();
 
@@ -34,7 +34,7 @@ public class DebugConnectionTest {
 
             System.out.println("Read: "+response);
             NetworkInteraction received = gson.fromJson(response, NetworkInteraction.class);
-            Core output = gson.fromJson(received.getJson(), Core.class);
+            Master output = gson.fromJson(received.getJson(), Master.class);
             assertEquals(output.getNetworkManager().getRequestClass(), expectation.getNetworkManager().getRequestClass());
         }
     }

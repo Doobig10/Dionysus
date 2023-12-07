@@ -19,7 +19,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>Core</mainClass>
+                            <mainClass>Master</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

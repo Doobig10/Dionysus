@@ -72,4 +72,11 @@ public class ServerSocketNetworkThread implements NetworkThread{
             this.thread.start();
         }
     }
+
+    @Override
+    public void close() {
+        if (!this.thread.isAlive()) {
+            this.thread.interrupt();
+        }
+    }
 }

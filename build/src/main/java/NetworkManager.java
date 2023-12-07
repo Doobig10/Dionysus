@@ -28,6 +28,12 @@ public class NetworkManager implements NetworkMaster {
         }
     }
 
+    public void close(){
+        for (NetworkThread thread: this.networkThreads) {
+            thread.close();
+        }
+    }
+
     @Override
     public Class<? extends Request> getRequestClass() {
         return NetworkInteraction.class;
@@ -36,11 +42,16 @@ public class NetworkManager implements NetworkMaster {
     @Override
     public Completion process(Request rawRequest) {
         Gson gson = new Gson();
-        NetworkInteraction interaction = (NetworkInteraction) rawRequest;
+        ResourceManager resourceManager = MasterSingleton.getInstance().getResourceManager();
 
+        NetworkInteraction interaction = (NetworkInteraction) rawRequest;
         interaction.updateJson(
             switch (interaction.getHeader()) {
-                case SETUP -> null;
+                case SETUP -> {
+                    LOGGER.atTrace().log("Sending Setup Data Over Socket");
+                    yield resourceManager.getSetupData();
+                }
+                case POPULATE -> null;
                 case FINALISE -> null;
 
                 case DEBUG_ECHO -> {
