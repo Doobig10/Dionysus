@@ -48,11 +48,21 @@ public class NetworkManager implements NetworkMaster {
         interaction.updateJson(
             switch (interaction.getHeader()) {
                 case SETUP -> {
-                    LOGGER.atTrace().log("Sending Setup Data Over Socket");
+                    LOGGER.atTrace().log("Received Setup request");
                     yield resourceManager.getSetupData();
                 }
-                case POPULATE -> null;
-                case FINALISE -> null;
+                case POPULATE -> {
+                    LOGGER.atTrace().log("Received Populate request");
+                    //TODO: replace Object with implementation
+                    Object contents = gson.fromJson(interaction.getJson(), Object.class);
+                    yield resourceManager.getPopulation(contents);
+                }
+                case FINALISE -> {
+                    LOGGER.atTrace().log("Received Finalise request");
+                    //TODO: replace Object with implementation
+                    Object contents = gson.fromJson(interaction.getJson(), Object.class);
+                    yield resourceManager.insertResults(contents);
+                }
 
                 case DEBUG_ECHO -> {
                     Object contents = gson.fromJson(interaction.getJson(), Object.class);
@@ -61,7 +71,7 @@ public class NetworkManager implements NetworkMaster {
                 }
             }
         );
-        LOGGER.atDebug().log("Returning interaction "+interaction.getJson());
+        LOGGER.atDebug().log("Returning interaction: "+interaction.getJson());
         return interaction;
     }
 }
