@@ -1,4 +1,4 @@
-package database;
+package integration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +11,7 @@ public class MariaDatabase implements Database {
     private static final Logger LOGGER = LoggerFactory.getLogger(MariaDatabase.class);
 
     private final String address;
-    private final String port;
+    private final Integer port;
     private final String database;
 
     private String user;

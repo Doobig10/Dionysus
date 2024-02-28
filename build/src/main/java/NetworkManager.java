@@ -4,6 +4,7 @@ import network.connection.NetworkMaster;
 import network.connection.NetworkThread;
 import network.connection.Request;
 import network.connection.exceptions.AlreadyBoundException;
+import network.interactions.Body;
 import network.interactions.NetworkInteraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,15 +48,11 @@ public class NetworkManager implements NetworkMaster {
         NetworkInteraction interaction = (NetworkInteraction) rawRequest;
         interaction.updateJson(
             switch (interaction.getHeader()) {
-                case SETUP -> {
-                    LOGGER.atTrace().log("Received Setup request");
-                    yield resourceManager.getSetupData();
-                }
                 case POPULATE -> {
                     LOGGER.atTrace().log("Received Populate request");
-                    //TODO: replace Object with implementation
-                    Object contents = gson.fromJson(interaction.getJson(), Object.class);
-                    yield resourceManager.getPopulation(contents);
+                    Body.PopulateRequest contents = gson.fromJson(interaction.getJson(), Body.PopulateRequest.class);
+                    contents.setPopulation(resourceManager.getPopulation(contents.getRequiredPopulation()));
+                    yield contents;
                 }
                 case FINALISE -> {
                     LOGGER.atTrace().log("Received Finalise request");
