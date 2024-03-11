@@ -44,16 +44,13 @@ public final class Server {
         );
 
         master.getResourceManager().linkModifier(
-                //TODO: Replace with Builder
+                //TODO: Replace with Builder + Envs
                 new AgentModifier(
                         10,
-                        0.15,
-                        10
+                        0.1,
+                        5
                 )
         );
 
-        AgentPrecept[] precepts = master.getResourceManager().getPopulation(2);
-        System.out.println(precepts[0].getLootPrediction(RoomType.RED));
-        System.out.println(precepts[1].getLootPrediction(RoomType.RED));
     }
 }

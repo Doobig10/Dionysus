@@ -1,3 +1,4 @@
+import gamedata.AgentResult;
 import integration.Database;
 
 import integration.tools.AgentModifier;
@@ -10,6 +11,7 @@ import integration.tools.Validation;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ResourceManager {
     private final static Logger LOGGER = LoggerFactory.getLogger(ResourceManager.class);
@@ -42,6 +44,7 @@ public class ResourceManager {
             for (AgentPrecept precept: rawPrecepts) {
                 precept = modifier.attemptCross(precept, rawPrecepts.get((rawPrecepts.indexOf(precept)+1)%count));
                 precept = modifier.attemptMutation(precept);
+                if (precept.getID() == -1) {precept.setID(AgentQueries.insertAgent(instance, precept));}
                 agents.add(precept);
                 LOGGER.atTrace().log("Added agent with ID: "+precept.getID());
             }
@@ -52,8 +55,19 @@ public class ResourceManager {
         return agents.toArray(new AgentPrecept[0]);
     }
 
-    public boolean insertResults(Object results) {
+    public boolean insertResults(HashMap<Integer, AgentResult> results) {
         if (!this.validated) {this.validated = Validation.validate(this.database);}
+        try (Connection instance = this.database.getConnectionInstance()) {
+            for (Integer id: results.keySet()) {
+                AgentResult result = results.get(id);
+                boolean success = AgentQueries.insertResult(instance,
+                        id,
+                        new AgentResult(result.getScore(), result.getTurns())
+                );
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         return true; //TODO: return true if success, else false
     }

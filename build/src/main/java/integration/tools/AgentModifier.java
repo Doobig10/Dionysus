@@ -48,18 +48,22 @@ public final class AgentModifier {
     public AgentPrecept attemptCross(AgentPrecept primary, AgentPrecept secondary) {
         if (ThreadLocalRandom.current().nextInt(0, 100) > this.crossChance) {return primary;}
         LOGGER.atTrace().log("Crossing agent ID: "+primary.getID()+" with: "+secondary.getID());
+        AgentPrecept[] precepts = new AgentPrecept[2];
+        precepts[0] = primary; precepts[1] = secondary;
+
         AgentPrecept newPrecept = new AgentPrecept(
                 -1,
                 Math.max(primary.getGeneration(), secondary.getGeneration()) + 1,
-                0.5*(primary.getAccuracyFactor()+ secondary.getAccuracyFactor()),
-                0.5*(primary.getDistanceFactor() + secondary.getDistanceFactor())
+                precepts[ThreadLocalRandom.current().nextInt(0,1)].getAccuracyFactor(),
+                precepts[ThreadLocalRandom.current().nextInt(0,1)].getDistanceFactor()
         );
+
         for (RoomType type: RoomType.values()) {
             newPrecept.addLootPrediction(type,
-                    (int) Math.round(0.5 * (primary.getLootPrediction(type) + secondary.getLootPrediction(type)))
+                    precepts[ThreadLocalRandom.current().nextInt(0,1)].getLootPrediction(type)
             );
             newPrecept.addDifficultyFactor(type,
-                    0.5 * (primary.getDifficultyFactor(type) + secondary.getDifficultyFactor(type))
+                    precepts[ThreadLocalRandom.current().nextInt(0,1)].getDifficultyFactor(type)
             );
         }
         return newPrecept;

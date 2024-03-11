@@ -1,14 +1,12 @@
 package integration.tools;
 
 import gamedata.AgentPrecept;
+import gamedata.AgentResult;
 import gamedata.mapdata.roomTypes.RoomType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public final class AgentQueries {
@@ -72,5 +70,56 @@ public final class AgentQueries {
 
     public static Integer getRandomExistingPopID(Connection conn) throws SQLException {
         return getRandomExistingPopIDs(conn, 1)[0];
+    }
+
+    public static int insertAgent(Connection conn, AgentPrecept agent) throws SQLException {
+        PreparedStatement preparedStatement;
+        Statement statement;
+        int id = -1;
+
+        preparedStatement = conn.prepareStatement("""
+        INSERT INTO agents (generation, accuracy, distance)
+        VALUES (?, ?, ?)
+        """);
+        preparedStatement.setInt(1, agent.getGeneration());
+        preparedStatement.setDouble(2, agent.getAccuracyFactor());
+        preparedStatement.setDouble(3, agent.getDistanceFactor());
+        preparedStatement.executeQuery();
+
+        statement = conn.createStatement();
+        ResultSet results = statement.executeQuery("""
+        SELECT agents.id
+        FROM agents
+        WHERE agents.id = LAST_INSERT_ID()
+        """);
+
+        if (results.next()) {
+            id = results.getInt("id");
+            for (RoomType type : RoomType.values()) {
+                preparedStatement = conn.prepareStatement("""
+                    INSERT INTO predictions (agent_id, type, loot, difficulty)
+                    VALUES (?, ?, ?, ?)
+                    """);
+                preparedStatement.setInt(1, id);
+                preparedStatement.setString(2, type.name());
+                preparedStatement.setInt(3, agent.getLootPrediction(type));
+                preparedStatement.setDouble(4, agent.getDifficultyFactor(type));
+                preparedStatement.execute();
+            }
+        }
+        return id;
+    }
+
+    public static boolean insertResult(Connection conn, Integer id, AgentResult result) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement("""
+        INSERT INTO results (agent_id, score, turns) 
+        VALUES (?, ?, ?)
+        """);
+        statement.setInt(1, id);
+        statement.setInt(2, result.getScore());
+        statement.setInt(3, result.getTurns());
+
+        ResultSet results= statement.executeQuery();
+        return true;
     }
 }

@@ -56,9 +56,9 @@ public class NetworkManager implements NetworkMaster {
                 }
                 case FINALISE -> {
                     LOGGER.atTrace().log("Received Finalise request");
-                    //TODO: replace Object with implementation
-                    Object contents = gson.fromJson(interaction.getJson(), Object.class);
-                    yield resourceManager.insertResults(contents);
+                    Body.FinaliseRequest contents = gson.fromJson(interaction.getJson(), Body.FinaliseRequest.class);
+                    contents.setSuccess(resourceManager.insertResults(contents.getResults()));
+                    yield contents;
                 }
 
                 case DEBUG_ECHO -> {

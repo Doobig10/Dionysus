@@ -5,12 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class AgentPrecept {
     private static final Logger LOGGER = LoggerFactory.getLogger(AgentPrecept.class);
 
-    private final int id;
+    private int id;
     private final int generation;
     private final double accuracyFactor;
     private final double distanceFactor;
@@ -57,5 +56,9 @@ public class AgentPrecept {
     public AgentPrecept addDifficultyFactor(RoomType roomType, Double value) {
         this.difficultyFactor.putIfAbsent(roomType, value);
         return this;
+    }
+
+    public void setID(int id) {
+        this.id = id;
     }
 }

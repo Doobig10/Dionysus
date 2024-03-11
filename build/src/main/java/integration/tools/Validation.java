@@ -30,17 +30,17 @@ public final class Validation {
         LOGGER.atTrace().log("Attempting create tables");
         Statement statement = conn.createStatement();
         statement.addBatch("""
-            create table if not exists agents
+            create table if not exists dionysus_local.agents
             (
                 id         int auto_increment
                     primary key,
                 generation int    not null,
                 accuracy   double not null,
-                distance   double null
+                distance   double not null
             );
             """);
         statement.addBatch("""
-            create table if not exists predictions
+            create table if not exists dionysus_local.predictions
             (
                 agent_id   int         not null,
                 type       varchar(15) not null,
@@ -48,20 +48,21 @@ public final class Validation {
                 difficulty double      not null,
                 primary key (agent_id, type),
                 constraint predictions_agents_id_fk
-                    foreign key (agent_id) references agents (id)
+                    foreign key (agent_id) references dionysus_local.agents (id)
                         on delete cascade
             )
                 comment 'Agent Predictions HashMap';
             """);
         statement.addBatch("""
-            create table if not exists results
+            create table if not exists dionysus_local.results
             (
                 id       int auto_increment
                     primary key,
                 agent_id int not null,
                 score    int not null,
+                turns    int null,
                 constraint results_agents_id_fk
-                    foreign key (agent_id) references agents (id)
+                    foreign key (agent_id) references dionysus_local.agents (id)
                         on delete cascade
             )
                 comment 'Stores game results';
