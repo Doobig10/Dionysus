@@ -12,10 +12,51 @@ import java.util.ArrayList;
 public final class AgentQueries {
     private static final Logger LOGGER = LoggerFactory.getLogger(AgentQueries.class);
 
+    public static void cullAgents(Connection conn, int percent) throws SQLException {
+        Statement statement = conn.createStatement();
+        ResultSet results = statement.executeQuery("""
+            SELECT COUNT(*) AS total
+            FROM agents
+            """);
+        results.next();
+        int total = results.getInt("total");
+        LOGGER.atTrace().log("Total: "+total);
+
+        PreparedStatement preparedStatement = conn.prepareStatement("""
+            SELECT agents.id AS id
+            FROM agents
+            LEFT JOIN results on agents.id = results.agent_id
+            GROUP BY agents.id
+            ORDER BY AVG(score) ASC
+            LIMIT ?
+            """);
+        LOGGER.atTrace().log("Quantity: "+(int) (((double) percent/100)*total));
+        preparedStatement.setInt(1,(int) (((double) percent/100)*total));
+        preparedStatement.execute();
+        ResultSet preparedResults = preparedStatement.getResultSet();
+
+        StringBuilder queryBuilder = new StringBuilder("(");
+        LOGGER.atTrace().log("Success:" + preparedResults.next());
+        queryBuilder.append(preparedResults.getInt("id"));
+        while (preparedResults.next()) {
+            queryBuilder.append(", ");
+            queryBuilder.append(preparedResults.getString("id"));
+        }
+        queryBuilder.append(")");
+        String query = queryBuilder.toString();
+        LOGGER.atTrace().log(query);
+        PreparedStatement deleteStatement = conn.prepareStatement("""
+            DELETE
+            FROM agents
+            WHERE agents.id IN\s
+            """+query);
+        deleteStatement.execute();
+    }
+
     public static Integer[] getRandomExistingPopIDs(Connection conn, Integer count) throws SQLException {
         Statement statement = conn.createStatement();
         ResultSet results = statement.executeQuery("""
-            SELECT agent_id, -LOG(1-RAND())*AVG(score) OVER (PARTITION BY agent_id) AS weight
+            SELECT agent_id, 1-RAND()*AVG(score) OVER (PARTITION BY agent_id) AS weight
                 FROM results
                 GROUP BY agent_id
                 ORDER BY weight DESC
@@ -120,6 +161,23 @@ public final class AgentQueries {
         statement.setInt(3, result.getTurns());
 
         ResultSet results= statement.executeQuery();
+        return true;
+    }
+
+    public static boolean logEpoch(Connection conn, Integer epoch) throws SQLException {
+        Statement statement = conn.createStatement();
+        ResultSet results = statement.executeQuery("""
+            SELECT agents.generation,
+            AVG(results.score), AVG(results.turns),
+            MAX(results.score), MIN(results.turns)
+            FROM agents
+            JOIN results ON agents.id = results.agent_id
+            GROUP BY agents.generation
+            """);
+        PreparedStatement preparedStatement = conn.prepareStatement("""
+            INSERT INTO epochs(epoch, generation, avg_score, avg_turns, max_score, min_turns)
+            SELECT
+            """);
         return true;
     }
 }

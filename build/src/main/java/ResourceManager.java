@@ -20,6 +20,7 @@ public class ResourceManager {
     private boolean validated = false;
 
     private AgentModifier modifier;
+    private int counter;
 
     public void linkDatabase(Database db) {
         this.database = db;
@@ -44,9 +45,13 @@ public class ResourceManager {
             for (AgentPrecept precept: rawPrecepts) {
                 precept = modifier.attemptCross(precept, rawPrecepts.get((rawPrecepts.indexOf(precept)+1)%count));
                 precept = modifier.attemptMutation(precept);
-                if (precept.getID() == -1) {precept.setID(AgentQueries.insertAgent(instance, precept));}
+                if (precept.getID() == -1) {precept.setID(AgentQueries.insertAgent(instance, precept)); this.counter++;}
                 agents.add(precept);
                 LOGGER.atTrace().log("Added agent with ID: "+precept.getID());
+            }
+            if (this.counter >= 400) {
+                AgentQueries.cullAgents(instance, 60);
+                this.counter=0;
             }
         }
         catch (SQLException e) {

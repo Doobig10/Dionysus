@@ -46,9 +46,9 @@ public final class Server {
         master.getResourceManager().linkModifier(
                 //TODO: Replace with Builder + Envs
                 new AgentModifier(
-                        10,
-                        0.1,
-                        5
+                        25,
+                        0.2,
+                        25
                 )
         );
 

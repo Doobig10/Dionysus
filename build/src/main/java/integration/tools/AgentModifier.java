@@ -27,22 +27,26 @@ public final class AgentModifier {
         AgentPrecept newPrecept = new AgentPrecept(
                 -1,
                 baseline.getGeneration() + 1,
-                baseline.getAccuracyFactor() * ThreadLocalRandom.current()
-                        .nextDouble(1-mutationFactor,1+mutationFactor),
-                baseline.getDistanceFactor() * ThreadLocalRandom.current()
-                        .nextDouble(1-mutationFactor,1+mutationFactor)
+                bound(baseline.getAccuracyFactor() + ThreadLocalRandom.current()
+                        .nextDouble(0-mutationFactor,0+mutationFactor),0,1),
+                bound(baseline.getDistanceFactor() + ThreadLocalRandom.current()
+                        .nextDouble(0-mutationFactor,0+mutationFactor),0,1)
         );
         for (RoomType type: RoomType.values()) {
             newPrecept.addLootPrediction(type,
-                    (int) Math.round(baseline.getLootPrediction(type) * ThreadLocalRandom.current()
-                            .nextDouble(1-mutationFactor,1+mutationFactor))
+                    (int) bound(Math.round(baseline.getLootPrediction(type) + ThreadLocalRandom.current()
+                            .nextDouble(-1000*mutationFactor,1000*mutationFactor)),0,10000)
             );
             newPrecept.addDifficultyFactor(type,
-                    baseline.getDifficultyFactor(type) * ThreadLocalRandom.current()
-                            .nextDouble(1-mutationFactor,1+mutationFactor)
+                    bound(baseline.getDifficultyFactor(type) + ThreadLocalRandom.current()
+                            .nextDouble(0-mutationFactor,0+mutationFactor),0,1)
             );
         }
         return newPrecept;
+    }
+
+    private double bound(double value, int min, int max) {
+        return Math.max(Math.min(value, max), min);
     }
 
     public AgentPrecept attemptCross(AgentPrecept primary, AgentPrecept secondary) {
