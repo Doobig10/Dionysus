@@ -1,4 +1,4 @@
-package database;
+package integration;
 
 public class DatabaseFactory {
     public static MariaDatabaseBuilder getMariaBuilder() {

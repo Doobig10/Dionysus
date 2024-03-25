@@ -2,7 +2,7 @@ package network.interactions;
 
 import com.google.gson.Gson;
 
-public class NetworkInteractionBuilder {
+public final class NetworkInteractionBuilder {
 
     InteractionType type;
     String json;

@@ -1,8 +1,8 @@
-package database;
+package integration;
 
 public class MariaDatabaseBuilder {
     String address = "localhost";
-    String port = "3306";
+    Integer port = 3306;
     String database;
 
     public MariaDatabaseBuilder setAddress(String address) {
@@ -10,7 +10,7 @@ public class MariaDatabaseBuilder {
         return this;
     }
 
-    public MariaDatabaseBuilder setPort(String port) {
+    public MariaDatabaseBuilder setPort(Integer port) {
         this.port = port;
         return this;
     }

@@ -1,4 +1,4 @@
-package database;
+package integration;
 
 import java.sql.Connection;
 
