@@ -12,6 +12,8 @@ public abstract class AbstractLocation
 
     private final ArrayList<Linkable> links = new ArrayList<>();
 
+    public boolean isRoom() {return false;}
+
     @Override
     public void createLink(Linkable target) {
         links.add(target);
