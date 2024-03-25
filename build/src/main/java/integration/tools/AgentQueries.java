@@ -176,8 +176,20 @@ public final class AgentQueries {
             """);
         PreparedStatement preparedStatement = conn.prepareStatement("""
             INSERT INTO epochs(epoch, generation, avg_score, avg_turns, max_score, min_turns)
-            SELECT
+            VALUES (?, ?, ?, ?, ?, ?)
             """);
+        while(results.next()) {
+            preparedStatement.setInt(1,epoch);
+            preparedStatement.setInt(2, results.getInt(1));
+
+            preparedStatement.setDouble(3, results.getDouble(2));
+            preparedStatement.setDouble(4,results.getDouble(3));
+            preparedStatement.setInt(5, results.getInt(4));
+            preparedStatement.setInt(6, results.getInt(5));
+
+            preparedStatement.execute();
+            preparedStatement.clearParameters();
+        }
         return true;
     }
 }

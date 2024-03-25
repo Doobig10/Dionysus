@@ -21,6 +21,7 @@ public class ResourceManager {
 
     private AgentModifier modifier;
     private int counter;
+    private int epochs = 0;
 
     public void linkDatabase(Database db) {
         this.database = db;
@@ -49,8 +50,10 @@ public class ResourceManager {
                 agents.add(precept);
                 LOGGER.atTrace().log("Added agent with ID: "+precept.getID());
             }
-            if (this.counter >= 400) {
+            if (this.counter >= 200) {
+                this.epochs++;
                 AgentQueries.cullAgents(instance, 60);
+                AgentQueries.logEpoch(instance, this.epochs);
                 this.counter=0;
             }
         }

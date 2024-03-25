@@ -2,7 +2,7 @@ package gamedata.mapdata;
 
 public final class TileChain {
 
-    private Tile root = new Tile();
+    private final Tile root = new Tile();
     private Tile active = this.root;
 
     public TileChain(int length) {

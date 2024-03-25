@@ -67,8 +67,21 @@ public final class Validation {
             )
                 comment 'Stores game results';
             """);
+        statement.addBatch("""
+            create table if not exists dionysus_local.epochs
+            (
+                epoch      int    not null,
+                generation int    not null,
+                avg_score  double not null,
+                avg_turns  double not null,
+                max_score  double not null,
+                min_turns  double not null,
+                primary key (epoch, generation)
+            )
+                comment 'Stores generational averages across epochs';      
+            """);
         int[] updates = statement.executeBatch();
-        return updates[0] + updates[1] + updates[2] > 0;
+        return (updates[0] + updates[1] + updates[2] + updates[3]) > 0;
     }
 
 }

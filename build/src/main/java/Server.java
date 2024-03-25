@@ -47,8 +47,8 @@ public final class Server {
                 //TODO: Replace with Builder + Envs
                 new AgentModifier(
                         25,
-                        0.2,
-                        25
+                        0.05,
+                        5
                 )
         );
 

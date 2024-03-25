@@ -21,6 +21,11 @@ public class Board implements Serializable {
         this.initialLocation = initialLocation;
     }
 
+    public Board(AbstractRoom initialLocation) {
+        this.initialLocation = initialLocation;
+        this.rooms.add(initialLocation);
+    }
+
     public void addRooms(ArrayList<AbstractRoom> rooms){
         this.rooms.addAll(rooms);
     }
