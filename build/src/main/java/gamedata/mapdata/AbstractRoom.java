@@ -38,6 +38,9 @@ public abstract class AbstractRoom
     }
 
     @Override
+    public boolean isRoom() {return true;}
+
+    @Override
     public boolean isLooted() {
         return this.looted;
     }
@@ -71,7 +74,7 @@ public abstract class AbstractRoom
 
     @Override
     public int getDifficulty() {
-        return this.challenges.get(0).getDifficulty();
+        return this.getNextChallenge().getDifficulty();
     }
 
     public void clearChallenge(){

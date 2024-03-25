@@ -64,26 +64,26 @@ public class PlayerObject {
             }
 
             if (this.currentLocation == targetRoom) {
-                boolean success = false;
-                if (targetRoom.hasChallenge()) {
-                    int difficulty = targetRoom.getDifficulty();
-                    int attempt =
-                            ThreadLocalRandom.current().nextInt(1,6) +
-                            ThreadLocalRandom.current().nextInt(1,6)
-                            ; // Two Dice rolls
-                    LOGGER.atTrace().log("Challenging Encounter:\t"+difficulty+"\tRoll: "+attempt);
-                    if (attempt >= difficulty) {
-                        success = true;
+                if (targetRoom.isRoom()) {
+                    boolean success = false;
+                    if (targetRoom.hasChallenge()) {
+                        int difficulty = targetRoom.getDifficulty();
+                        int attempt = GameTools.roll(2, 6);
+                        LOGGER.atTrace().log("Challenging Encounter:\t"+difficulty+"\tRoll: "+attempt);
+                        if (attempt >= difficulty) {
+                            success = true;
+                        }
                     }
-                }
-                else {success = true;}
+                    else {success = true;}
 
-                if (success) {
-                    this.loot.addAll(targetRoom.lootAll());
-                }
-                else {
-                    targetRoom.addKnownLoot(this.loot);
-                    this.loot.clear();
+                    if (success) {
+                        this.loot.addAll(targetRoom.lootAll());
+                        targetRoom.clearChallenge();
+                    }
+                    else {
+                        targetRoom.addKnownLoot(this.loot);
+                        this.loot.clear();
+                    }
                 }
             }
         }
@@ -116,7 +116,7 @@ public class PlayerObject {
         double specificDistance = PlayerMath.calculateDistance(this.currentLocation, encounter);
 
         double lootValueModifier = (1+specificAccuracy) * this.precepts.getAccuracyFactor();
-        double difficultyModifier = this.precepts.getDifficultyFactor(encounter.getRoomType());
+        double difficultyModifier = encounter.hasKnownDifficulty() ? GameTools.getChanceOrHigher(encounter.getDifficulty()) : this.precepts.getDifficultyFactor(encounter.getRoomType());
         double distanceModifier = Math.pow(this.precepts.getDistanceFactor(), Math.ceil(specificDistance/maxMovement));
 
         return encounterValue*lootValueModifier*difficultyModifier*distanceModifier;
