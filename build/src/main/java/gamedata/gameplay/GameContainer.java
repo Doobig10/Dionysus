@@ -29,7 +29,7 @@ public class GameContainer {
     public GameContainer(String boardSerialPath, int turnLimit, int requiredLoot) {
         Board boardObject = new Board(new RedRoom());
         try (
-                ObjectInputStream objStream = new ObjectInputStream(new FileInputStream(boardSerialPath));
+                ObjectInputStream objStream = new ObjectInputStream(new FileInputStream(boardSerialPath))
         )
         {
             boardObject = (Board) objStream.readObject();
@@ -98,9 +98,10 @@ public class GameContainer {
     }
 
     public int calculateScore(PlayerObject player) {
-        double score = Math.min(player.getCurrentLootValue(), this.requiredLoot);
-        score = score/player.getTurnsTaken();
-        score = score/((winner == player) ? 1 : 2);
+        double score = 1000;
+        score = score * Math.log(Math.min(player.getCurrentLootValue(), this.requiredLoot) + 1);
+        score = score / (Math.log(Math.pow((player.getTurnsTaken() + 1), 1.3)));
+        score = score / ((winner == player) ? 1 : 2);
         return (int) Math.floor(score);
     }
 
