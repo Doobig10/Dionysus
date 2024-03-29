@@ -20,16 +20,16 @@ public class Chamber extends SimpleAbstractRoom {
 
     @Override
     public int getChallengeCount() {
-        return 0;
+        return 3;
     }
 
     @Override
     public int getAverageStrength() {
-        return 0;
+        return 7;
     }
 
     @Override
     public int getStrengthRange() {
-        return 0;
+        return 3;
     }
 }

@@ -56,7 +56,7 @@ public final class AgentQueries {
     public static Integer[] getRandomExistingPopIDs(Connection conn, Integer count) throws SQLException {
         Statement statement = conn.createStatement();
         ResultSet results = statement.executeQuery("""
-            SELECT agent_id, 1-RAND()*AVG(score) OVER (PARTITION BY agent_id) AS weight
+            SELECT agent_id, 1-RAND()*AVG(1) OVER (PARTITION BY agent_id) AS weight
                 FROM results
                 GROUP BY agent_id
                 ORDER BY weight DESC

@@ -31,36 +31,41 @@ public abstract class SimpleAbstractRoom extends AbstractRoom {
             }
         };
 
-        lootable.setValue(ThreadLocalRandom.current().nextInt(
-                (int) Math.floor(getAverageLoot()*(1-getLootVariance())),
-                (int) Math.ceil(getAverageLoot()*(1+getLootVariance()))
-        ));
+        if (getAverageLoot() > 0) {
+            lootable.setValue(ThreadLocalRandom.current().nextInt(
+                    (int) Math.floor(getAverageLoot() * (1 - getLootVariance())),
+                    (int) Math.ceil(getAverageLoot() * (1 + getLootVariance()))
+            ));
+        }
+        else {lootable.setValue(0);}
 
         this.addHiddenLoot(new ArrayList<Lootable>(List.of(
                 lootable
         )));
 
-        for (int count = 0; count <= this.getChallengeCount(); count++) {
-            Challenge challenge = new Challenge() {
-                private int difficulty;
+        if (this.getChallengeCount() > 0) {
+            for (int count = 0; count <= this.getChallengeCount(); count++) {
+                Challenge challenge = new Challenge() {
+                    private int difficulty;
 
-                @Override
-                public int getDifficulty() {
-                    return this.difficulty;
-                }
+                    @Override
+                    public int getDifficulty() {
+                        return this.difficulty;
+                    }
 
-                @Override
-                public void setDifficulty(int difficulty) {
-                    this.difficulty = difficulty;
-                }
-            };
+                    @Override
+                    public void setDifficulty(int difficulty) {
+                        this.difficulty = difficulty;
+                    }
+                };
 
-            challenge.setDifficulty(ThreadLocalRandom.current().nextInt(
-                    getAverageStrength()-getStrengthRange(),
-                    getAverageStrength()+getStrengthRange()
-            ));
+                challenge.setDifficulty(ThreadLocalRandom.current().nextInt(
+                        getAverageStrength() - getStrengthRange(),
+                        getAverageStrength() + getStrengthRange()
+                ));
 
-            this.addChallenge(challenge);
+                this.addChallenge(challenge);
+            }
         }
 
     }

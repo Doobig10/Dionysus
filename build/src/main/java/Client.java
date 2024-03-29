@@ -110,7 +110,7 @@ public final class Client {
         Environment.EnvTool<String> stringEnvTool = new Environment.EnvTool<>(String.class);
         Environment.EnvTool<Integer> integerEnvTool = new Environment.EnvTool<>(Integer.class);
 
-        String path = stringEnvTool.getOrDefault("DIONYSUS_BOARD_PATH", "build/default_board.ser");
+        String path = stringEnvTool.getOrDefault("DIONYSUS_BOARD_PATH", "build/test_board.ser");
         String address = stringEnvTool.getOrDefault("DIONYSUS_SOCKET_ADDRESS","localhost");
         Integer port = integerEnvTool.getOrDefault("DIONYSUS_SOCKET_PORT", 22035);
         Integer maxIterations = integerEnvTool.getOrDefault("CLIENT_MAX_ITERATIONS", -1);

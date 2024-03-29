@@ -75,7 +75,7 @@ public class GameContainer {
     public void startGame() {
         int turnCount = 0;
         this.running = true;
-        while (turnCount++ < turnLimit && this.running) {
+        while (turnCount++ < turnLimit && this.running && !active_players.isEmpty()) {
             LOGGER.atTrace().log("Starting turn: "+turnCount);
             for (PlayerObject player : active_players) {
                 player.processTurn(this);

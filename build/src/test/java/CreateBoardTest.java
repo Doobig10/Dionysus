@@ -178,7 +178,7 @@ public class CreateBoardTest {
         juncs.get(42).link(gd(6, juncs.get(43)));
 
         juncs.get(43).link(l3.get(11));
-        juncs.get(43).link(gd())
+//        juncs.get(43).link(gd())
 
 
 
