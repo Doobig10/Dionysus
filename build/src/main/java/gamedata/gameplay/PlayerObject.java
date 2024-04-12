@@ -14,9 +14,9 @@ public class PlayerObject {
 
     private final AgentPrecept precepts;
 
-    private int maxMovement = 5;
+    private final int maxMovement = 5;
 
-    private ArrayList<Lootable> loot = new ArrayList<>();
+    private final ArrayList<Lootable> loot = new ArrayList<>();
     private AbstractLocation currentLocation = null;
 
     private int turnsTaken = 0;
