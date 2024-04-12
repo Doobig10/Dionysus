@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class PlayerObject {
     private static final Logger LOGGER = LoggerFactory.getLogger(PlayerObject.class);
@@ -112,10 +111,10 @@ public class PlayerObject {
             encounterValue = encounterValue + this.precepts.getLootPrediction(encounter.getRoomType());
         }
 
-        double specificAccuracy = PlayerMath.calculateAccuracy(gameContainer.getRequiredLoot(), this.getCurrentLootValue(), (int) encounterValue);
+        double specificAccuracy = PlayerMath.calculateAccuracyPenalty(gameContainer.getRequiredLoot(), this.getCurrentLootValue(), (int) encounterValue);
         double specificDistance = PlayerMath.calculateDistance(this.currentLocation, encounter);
 
-        double lootValueModifier = (1+specificAccuracy) * this.precepts.getAccuracyFactor();
+        double lootValueModifier = Math.max(1 - (specificAccuracy * this.precepts.getAccuracyFactor()), 0);
         double difficultyModifier = encounter.hasKnownDifficulty() ? GameTools.getChanceOrHigher(encounter.getDifficulty()) : this.precepts.getDifficultyFactor(encounter.getRoomType());
         double distanceModifier = Math.pow(this.precepts.getDistanceFactor(), Math.ceil(specificDistance/maxMovement));
 
@@ -144,10 +143,12 @@ public class PlayerObject {
     }
 
     private static final class PlayerMath {
-        public static double calculateAccuracy(int requiredLoot, int currentLoot, int lootValue) {
-            double remainingFrac = (1- ((double) (currentLoot) / requiredLoot));
-            double resultFrac = Math.abs(1-(((currentLoot) + lootValue) / requiredLoot));
-            return remainingFrac-resultFrac;
+        public static double calculateAccuracyPenalty(int requiredLoot, int currentLoot, int lootValue) {
+            double currentFrac = (double) (currentLoot) / requiredLoot;
+            double interest = Math.pow(currentFrac, 2);
+            double resultFrac = (double) (currentLoot + lootValue) / requiredLoot;
+            double accuracy = Math.abs(1 - resultFrac);
+            return (interest * accuracy);
         }
 
         public static int calculateDistance(Linkable currentLocation, Linkable targetLocation) {
