@@ -4,7 +4,6 @@ import integration.tools.AgentModifier;
 import tooling.Environment;
 import network.connection.NetworkThreadFactory;
 import integration.DatabaseFactory;
-
 public final class Server {
 
     private final static Environment.EnvTool<String> stringEnvTool = new Environment.EnvTool<>(String.class);
@@ -12,16 +11,16 @@ public final class Server {
 
     public static void main(String[] args) {
 
-        String socket_address = stringEnvTool.getOrDefault("DIONYSUS_SOCKET_ADDRESS", "localhost");
-        Integer socket_port = integerEnvTool.getOrDefault("DIONYSUS_SOCKET_PORT", 22035);
-        Integer socket_threads = integerEnvTool.getOrDefault("DIONYSUS_SOCKET_THREADS", 1);
+        String socket_address = stringEnvTool.getOrDefault("SERVER_SOCKET_ADDRESS", "localhost");
+        Integer socket_port = integerEnvTool.getOrDefault("SERVER_SOCKET_PORT", 22035);
+        Integer socket_threads = integerEnvTool.getOrDefault("SERVER_SOCKET_THREADS", 1);
 
-        String database_address = stringEnvTool.getOrDefault("DIONYSUS_DB_ADDRESS", "localhost");
-        Integer database_port = integerEnvTool.getOrDefault("DIONYSUS_DB_PORT", 3306);
+        String database_address = stringEnvTool.getOrDefault("SERVER_DB_ADDRESS", "localhost");
+        Integer database_port = integerEnvTool.getOrDefault("SERVER_DB_PORT", 3306);
 
-        String database_name = stringEnvTool.getOrDefault("DIONYSUS_DB_NAME", "dionysus_local");
-        String database_username = stringEnvTool.getOrDefault("DIONYSUS_DB_USERNAME", "default");
-        String database_password = stringEnvTool.getOrDefault("DIONYSUS_DB_PASSWORD", "");
+        String database_name = stringEnvTool.getOrDefault("SERVER_DB_NAME", "dionysus_local");
+        String database_username = stringEnvTool.getOrDefault("SERVER_DB_USERNAME", "default");
+        String database_password = stringEnvTool.getOrDefault("SERVER_DB_PASSWORD", "");
 
 
         Master master = MasterSingleton.getInstance();

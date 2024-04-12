@@ -50,7 +50,7 @@ public class CreateAgentTest {
 
     @Test
     public void insertBatchTest() throws SQLException {
-        int batchSize = 10;
+        int batchSize = 100;
 
         Database db = DatabaseFactory.getMariaBuilder()
                 .setAddress("localhost")

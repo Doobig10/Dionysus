@@ -4,13 +4,17 @@ import gamedata.gameplay.Challenge;
 import gamedata.gameplay.Encounter;
 import gamedata.gameplay.Lootable;
 import gamedata.mapdata.roomTypes.RoomType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class AbstractRoom
         extends AbstractLocation
         implements Encounter
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractRoom.class);
 
     private boolean knownDifficulty = false;
     private final ArrayList<Challenge> challenges = new ArrayList<>();
@@ -78,9 +82,14 @@ public abstract class AbstractRoom
     }
 
     public void clearChallenge(){
-        this.challenges.remove(0);
-        if (this.hasChallenge()) {
-            this.knownDifficulty = false;
+        try {
+            this.challenges.remove(0);
+            if (this.hasChallenge()) {
+                this.knownDifficulty = false;
+            }
+        } catch (IndexOutOfBoundsException e) {
+            LOGGER.atError().log("Index out of bounds");
+            LOGGER.atError().log(String.valueOf(this.challenges.size()));
         }
     }
 

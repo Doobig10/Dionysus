@@ -33,7 +33,8 @@ FROM ubuntu/jre:17-22.04_edge AS environment
 
 WORKDIR /app
 COPY --from=builder /build/application.jar .
-CMD ["-jar", "application.jar"]
+ADD build/default_board.ser .
+CMD ["-cp", "application.jar", "Server"]
 
 # # END RUN
 # # -----------------------------

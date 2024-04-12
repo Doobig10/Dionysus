@@ -100,7 +100,7 @@ public class GameContainer {
     public int calculateScore(PlayerObject player) {
         double score = 1000;
         score = score * Math.log(Math.min(player.getCurrentLootValue(), this.requiredLoot) + 1);
-        score = score / (Math.log(Math.pow((player.getTurnsTaken() + 1), 1.3)));
+        score = score / (Math.log(Math.pow((player.getTurnsTaken() + 1), 2.2)));
         score = score / ((winner == player) ? 1 : 2);
         return (int) Math.floor(score);
     }
