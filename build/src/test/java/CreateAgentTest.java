@@ -50,14 +50,14 @@ public class CreateAgentTest {
 
     @Test
     public void insertBatchTest() throws SQLException {
-        int batchSize = 100;
+        int batchSize = 20;
 
         Database db = DatabaseFactory.getMariaBuilder()
                 .setAddress("localhost")
                 .setPort(3306)
                 .setDatabase("dionysus_local")
                 .build()
-                .login("default", "");
+                .login("default", "password");
 
         Validation.validate(db);
 

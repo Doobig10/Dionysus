@@ -8,6 +8,7 @@ public final class Server {
 
     private final static Environment.EnvTool<String> stringEnvTool = new Environment.EnvTool<>(String.class);
     private final static Environment.EnvTool<Integer> integerEnvTool = new Environment.EnvTool<>(Integer.class);
+    private final static Environment.EnvTool<Double> doubleEnvTool = new Environment.EnvTool<>(Double.class);
 
     public static void main(String[] args) {
 
@@ -21,6 +22,12 @@ public final class Server {
         String database_name = stringEnvTool.getOrDefault("SERVER_DB_NAME", "dionysus_local");
         String database_username = stringEnvTool.getOrDefault("SERVER_DB_USERNAME", "default");
         String database_password = stringEnvTool.getOrDefault("SERVER_DB_PASSWORD", "");
+
+        Integer mutation_chance = integerEnvTool.getOrDefault("SERVER_MUTATOR_MUTATION_CHANCE", 25);
+        Double mutation_factor = doubleEnvTool.getOrDefault("SERVER_MUTATOR_MUTATION_FACTOR", 0.05);
+        Integer cross_chance = integerEnvTool.getOrDefault("SERVER_MUTATOR_CROSS_CHANCE", 10);
+        Integer epoch_population = integerEnvTool.getOrDefault("SERVER_MUTATOR_EPOCH_REQUIREMENT", 100);
+        Integer epoch_cull = integerEnvTool.getOrDefault("SERVER_MUTATOR_EPOCH_CULL", 75);
 
 
         Master master = MasterSingleton.getInstance();
@@ -43,11 +50,12 @@ public final class Server {
         );
 
         master.getResourceManager().linkModifier(
-                //TODO: Replace with Builder + Envs
                 new AgentModifier(
-                        25,
-                        0.05,
-                        5
+                        mutation_chance,
+                        mutation_factor,
+                        cross_chance,
+                        epoch_population,
+                        epoch_cull
                 )
         );
 

@@ -1,0 +1,105 @@
+version: "3.0"
+
+services:
+  db:
+    image: mariadb
+    container_name: db
+    restart: always
+
+    environment:
+      MARIADB_RANDOM_ROOT_PASSWORD: "true"
+
+      MARIADB_DATABASE: "dionysus_local"
+      MARIADB_USER: "default"
+      MARIADB_PASSWORD: "password"
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - db:/var/lib/mysql
+
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--su-mysql", "--connect" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  master:
+    build: .
+    container_name: master
+    depends_on:
+      db:
+        condition: service_healthy
+
+    environment:
+      SERVER_SOCKET_ADDRESS: "0.0.0.0"
+      SERVER_SOCKET_PORT: 22035
+      SERVER_SOCKET_THREADS: 1
+
+      SERVER_DB_ADDRESS: "db"
+      SERVER_DB_PORT: 3306
+      SERVER_DB_NAME: "dionysus_local"
+      SERVER_DB_USERNAME: "default"
+      SERVER_DB_PASSWORD: "password"
+
+      SERVER_MUTATOR_MUTATION_FACTOR: 0.1
+      SERVER_MUTATOR_EPOCH_REQUIREMENT: 50
+      SERVER_MUTATOR_EPOCH_CULL: 20
+
+
+
+  client-1:
+    image: dionysus-client
+    container_name: client-1
+    depends_on:
+      master:
+        condition: service_started
+
+    environment:
+      CLIENT_SOCKET_ADDRESS: "master"
+      CLIENT_SOCKET_PORT: 22035
+      CLIENT_BOARD_PATH: "default_board.ser"
+      CLIENT_MAX_ITERATIONS: -1
+
+  client-2:
+    image: dionysus-client
+    container_name: client-2
+    depends_on:
+      master:
+        condition: service_started
+
+    environment:
+      CLIENT_SOCKET_ADDRESS: "master"
+      CLIENT_SOCKET_PORT: 22035
+      CLIENT_BOARD_PATH: "default_board.ser"
+      CLIENT_MAX_ITERATIONS: -1
+
+  client-3:
+    image: dionysus-client
+    container_name: client-3
+    depends_on:
+      master:
+        condition: service_started
+
+    environment:
+      CLIENT_SOCKET_ADDRESS: "master"
+      CLIENT_SOCKET_PORT: 22035
+      CLIENT_BOARD_PATH: "default_board.ser"
+      CLIENT_MAX_ITERATIONS: -1
+
+  client-4:
+    image: dionysus-client
+    container_name: client-4
+    depends_on:
+      master:
+        condition: service_started
+
+    environment:
+      CLIENT_SOCKET_ADDRESS: "master"
+      CLIENT_SOCKET_PORT: 22035
+      CLIENT_BOARD_PATH: "default_board.ser"
+      CLIENT_MAX_ITERATIONS: -1
+
+volumes:
+  db:

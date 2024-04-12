@@ -50,9 +50,9 @@ public class ResourceManager {
                 agents.add(precept);
                 LOGGER.atTrace().log("Added agent with ID: "+precept.getID());
             }
-            if (this.counter >= 200) {
+            if (this.counter >= modifier.getEpochPopulation()) {
                 this.epochs++;
-                AgentQueries.cullAgents(instance, 60);
+                AgentQueries.cullAgents(instance, modifier.getEpochPercent());
                 AgentQueries.logEpoch(instance, this.epochs);
                 this.counter=0;
             }

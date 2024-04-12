@@ -15,10 +15,15 @@ public final class AgentModifier {
 
     private final int crossChance;
 
-    public AgentModifier(int mutationChance, double mutationFactor, int crossChance) {
+    private final int epochPopulation;
+    private final int epochPercent;
+
+    public AgentModifier(int mutationChance, double mutationFactor, int crossChance, int epochPopulation, int epochPercent) {
         this.mutationChance = mutationChance;
         this.mutationFactor = mutationFactor;
         this.crossChance = crossChance;
+        this.epochPopulation = epochPopulation;
+        this.epochPercent = epochPercent;
     }
 
     public AgentPrecept attemptMutation(AgentPrecept baseline) {
@@ -73,4 +78,11 @@ public final class AgentModifier {
         return newPrecept;
     }
 
+    public int getEpochPopulation() {
+        return epochPopulation;
+    }
+
+    public int getEpochPercent() {
+        return this.epochPercent;
+    }
 }
